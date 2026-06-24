@@ -1,0 +1,51 @@
+.hero {
+  background: linear-gradient(135deg, var(--color-primary), #1e4a8a);
+  color: #fff;
+  padding: 3rem 0;
+  text-align: center;
+}
+
+.hero h1 { font-size: 2.25rem; margin-bottom: 0.25rem; }
+.hero h2 { font-family: var(--font-devanagari); font-size: 1.25rem; font-weight: 400; opacity: 0.9; margin-bottom: 0.75rem; }
+.hero p { font-size: 1rem; opacity: 0.85; max-width: 600px; margin: 0 auto 1.5rem; }
+
+.hero-search { display: flex; max-width: 500px; margin: 0 auto; position: relative; }
+
+.search-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--color-text-muted); }
+
+.hero-search input { flex: 1; padding: 0.75rem 1rem 0.75rem 2.5rem; border: none; border-radius: var(--border-radius) 0 0 var(--border-radius); font-size: 0.9rem; }
+
+.hero-search .btn { border-radius: 0 var(--border-radius) var(--border-radius) 0; padding: 0.75rem 1.5rem; }
+
+.stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: -1.5rem; position: relative; z-index: 10; }
+
+.stat-card { background: #fff; border-radius: var(--border-radius); padding: 1.25rem; text-align: center; box-shadow: var(--shadow-card); border-top: 3px solid var(--color-accent); }
+
+.stat-number { display: block; font-size: 1.5rem; font-weight: 700; color: var(--color-primary); }
+
+.stat-label { font-size: 0.8rem; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+.filter-bar { display: flex; gap: 1rem; margin: 1.5rem 0; flex-wrap: wrap; }
+
+.filter-group { flex: 1; min-width: 150px; }
+
+.filter-group label { font-size: 0.75rem; text-transform: uppercase; color: var(--color-text-muted); margin-bottom: 0.25rem; }
+
+.filter-group select { padding: 0.5rem; font-size: 0.85rem; }
+
+.pagination { display: flex; justify-content: center; gap: 0.5rem; margin-top: 2rem; flex-wrap: wrap; }
+
+.pagination button { padding: 0.5rem 1rem; border: 1px solid var(--color-border); background: #fff; border-radius: var(--border-radius); cursor: pointer; font-size: 0.85rem; }
+
+.pagination button.active { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
+
+.pagination button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+@media (max-width: 768px) {
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .hero h1 { font-size: 1.75rem; }
+}
+
+@media (max-width: 480px) {
+  .stats-row { grid-template-columns: 1fr; }
+}

@@ -1,0 +1,44 @@
+.navbar { position: sticky; top: 0; z-index: 1000; }
+
+.top-bar { background: var(--color-primary); color: #fff; padding: 0.5rem 0; font-size: 0.875rem; }
+
+.top-bar-content { display: flex; justify-content: space-between; align-items: center; }
+
+.logo-area { display: flex; align-items: center; gap: 0.75rem; }
+
+.smc-logo { height: 42px; width: auto; }
+
+.smc-title { font-family: var(--font-devanagari); font-weight: 700; font-size: 1rem; display: block; }
+
+.govt-text { font-size: 0.75rem; opacity: 0.8; }
+
+.top-bar-right a { color: #fff; opacity: 0.8; font-size: 0.8rem; }
+.top-bar-right a:hover { opacity: 1; }
+
+.main-nav { background: #1e4a8a; }
+
+.nav-content { display: flex; align-items: center; }
+
+.nav-links { display: flex; list-style: none; gap: 0; }
+
+.nav-links li { position: relative; }
+
+.nav-links a, .nav-links .nav-user {
+  display: block; padding: 0.75rem 1.25rem; color: #fff; font-size: 0.875rem; font-weight: 500;
+  border-bottom: 2px solid transparent; transition: all 0.2s;
+}
+
+.nav-links a:hover, .nav-links .active { border-bottom-color: var(--color-accent); }
+
+.nav-user { opacity: 0.8; }
+
+.btn-sm { padding: 0.35rem 0.75rem; margin: 0.5rem; font-size: 0.75rem; }
+
+.hamburger { display: none; background: none; border: none; color: #fff; font-size: 1.25rem; padding: 0.75rem; cursor: pointer; }
+
+@media (max-width: 768px) {
+  .hamburger { display: block; }
+  .nav-links { display: none; flex-direction: column; width: 100%; background: #1e4a8a; position: absolute; top: 100%; left: 0; }
+  .nav-links.open { display: flex; }
+  .nav-content { position: relative; flex-wrap: wrap; }
+}
