@@ -138,6 +138,7 @@ smc-project-tracker/
 - **Shared form**: AddProject and EditProject use the same component (EditProject re-exports AddProject)
 - **CSS**: Plain CSS with CSS variables, no framework (SMC visual match)
 - **Mobile responsive**: 3-col → 2-col → 1-col breakpoints at 768px and 480px
+- **Home page data fetching**: Uses `useEffect` with `cancelled` flag cleanup to prevent stale state updates on unmounted components. Both projects + stats fetched via `Promise.all` for parallel requests. `search` is included in the dependency array to avoid stale closure bug when navigating back to Home.
 
 ## Routing (React Router v6)
 

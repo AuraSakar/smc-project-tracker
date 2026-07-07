@@ -21,42 +21,43 @@ export default function Home() {
     ward: searchParams.get('ward') || '',
   });
 
-  const fetchProjects = async () => {
-    setLoading(true);
-    try {
-      const params = { page, limit: 9 };
-      if (filters.category) params.category = filters.category;
-      if (filters.status) params.status = filters.status;
-      if (filters.ward) params.ward = filters.ward;
-      if (search) params.search = search;
-      const res = await api.get('/projects', { params });
-      setProjects(res.data.projects);
-      setTotalPages(res.data.totalPages);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchStats = async () => {
-    try {
-      const all = await api.get('/projects', { params: { limit: 100 } });
-      const allProjects = all.data.projects;
-      setStats({
-        total: all.data.total,
-        completed: allProjects.filter((p) => p.status === 'Completed').length,
-        inProgress: allProjects.filter((p) => p.status === 'In Progress').length,
-        totalBudget: allProjects.reduce((sum, p) => sum + p.estimatedCost, 0),
-      });
-    } catch (err) { console.error(err); }
-  };
-
   useEffect(() => {
-    fetchProjects();
-    fetchStats();
+    let cancelled = false;
+
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const params = { page, limit: 9 };
+        if (filters.category) params.category = filters.category;
+        if (filters.status) params.status = filters.status;
+        if (filters.ward) params.ward = filters.ward;
+        if (search) params.search = search;
+        const [projectsRes, statsRes] = await Promise.all([
+          api.get('/projects', { params }),
+          api.get('/projects', { params: { limit: 100 } }),
+        ]);
+        if (cancelled) return;
+        setProjects(projectsRes.data.projects);
+        setTotalPages(projectsRes.data.totalPages);
+        const allProjects = statsRes.data.projects;
+        setStats({
+          total: statsRes.data.total,
+          completed: allProjects.filter((p) => p.status === 'Completed').length,
+          inProgress: allProjects.filter((p) => p.status === 'In Progress').length,
+          totalBudget: allProjects.reduce((sum, p) => sum + p.estimatedCost, 0),
+        });
+      } catch (err) {
+        if (!cancelled) console.error(err);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    };
+
+    fetchData();
     window.scrollTo(0, 0);
-  }, [page, filters]);
+
+    return () => { cancelled = true; };
+  }, [page, filters, search]);
 
   const handleFilterChange = (key, value) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
@@ -69,7 +70,7 @@ export default function Home() {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    fetchProjects();
+    setPage(1);
   };
 
   return (
