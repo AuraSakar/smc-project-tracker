@@ -145,6 +145,8 @@ smc-project-tracker/
 | Path                     | Component      | Access  |
 |--------------------------|----------------|---------|
 | `/`                      | Home           | Public  |
+| `/projects`              | Home (filtered)| Public  |
+| `/about`                 | About          | Public  |
 | `/projects/:id`          | ProjectDetail  | Public  |
 | `/login`                 | Login          | Public  |
 | `/admin/dashboard`       | Dashboard      | Auth    |

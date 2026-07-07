@@ -36,9 +36,18 @@ export default function Navbar() {
           </button>
           <ul className={`nav-links ${menuOpen ? 'open' : ''}`}>
             <li><Link to="/" onClick={() => setMenuOpen(false)}>Home</Link></li>
-            <li><Link to="/?category=All" onClick={() => setMenuOpen(false)}>All Projects</Link></li>
-            <li><Link to="/?category=Road" onClick={() => setMenuOpen(false)}>Categories</Link></li>
-            <li><Link to="/" onClick={() => setMenuOpen(false)}>About</Link></li>
+            <li><Link to="/projects" onClick={() => setMenuOpen(false)}>All Projects</Link></li>
+            <li className="dropdown">
+              <span>Categories <i className="fas fa-chevron-down"></i></span>
+              <ul className="dropdown-menu">
+                <li><Link to="/projects?category=Road" onClick={() => setMenuOpen(false)}>Roads</Link></li>
+                <li><Link to="/projects?category=Water Supply" onClick={() => setMenuOpen(false)}>Water Supply</Link></li>
+                <li><Link to="/projects?category=Drainage" onClick={() => setMenuOpen(false)}>Drainage</Link></li>
+                <li><Link to="/projects?category=Parks" onClick={() => setMenuOpen(false)}>Parks</Link></li>
+                <li><Link to="/projects?category=Public Buildings" onClick={() => setMenuOpen(false)}>Public Buildings</Link></li>
+              </ul>
+            </li>
+            <li><Link to="/about" onClick={() => setMenuOpen(false)}>About</Link></li>
             {isAuthenticated ? (
               <>
                 <li><Link to="/admin/dashboard">Admin Panel</Link></li>

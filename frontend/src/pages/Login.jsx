@@ -32,10 +32,13 @@ export default function Login() {
 
   return (
     <div className="login-page page-wrapper">
-      <div className="login-card card">
-        <div className="login-logo">🏛️</div>
-        <h2>Admin Login</h2>
-        <p className="text-muted">Solapur Municipal Corporation</p>
+      <div className="login-card">
+        <div className="logonew-section">
+          <div className="logonew">
+            <i className="fas fa-landmark"></i>
+          </div>
+          <h2>Admin Login</h2>
+        </div>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="form-group">
             <label>Employee ID</label>

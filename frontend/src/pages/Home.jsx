@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useLocation } from 'react-router-dom';
 import api from '../api/axios';
 import ProjectCard from '../components/ProjectCard';
 import FilterBar from '../components/FilterBar';
@@ -15,11 +15,23 @@ export default function Home() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
+  const location = useLocation();
+  const isHome = location.pathname === '/';
+
   const [filters, setFilters] = useState({
     category: searchParams.get('category') || '',
     status: searchParams.get('status') || '',
     ward: searchParams.get('ward') || '',
   });
+
+  useEffect(() => {
+    setFilters({
+      category: searchParams.get('category') || '',
+      status: searchParams.get('status') || '',
+      ward: searchParams.get('ward') || '',
+    });
+    setSearch(searchParams.get('search') || '');
+  }, [searchParams]);
 
   useEffect(() => {
     let cancelled = false;
@@ -75,30 +87,34 @@ export default function Home() {
 
   return (
     <div>
-      <section className="hero">
-        <div className="container hero-content">
-          <h1>SMC Project Tracker</h1>
-          <h2>प्रकल्प माहिती पोर्टल</h2>
-          <p>Track all civic development projects of Solapur Municipal Corporation — roads, water supply, drainage, parks, and more.</p>
-          <form onSubmit={handleSearch} className="hero-search">
-            <i className="fas fa-search search-icon"></i>
-            <input
-              type="text"
-              placeholder="Search projects by name, ward, or location..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-            <button type="submit" className="btn btn-primary">Search</button>
-          </form>
-        </div>
-      </section>
+      {isHome && (
+        <>
+          <section className="hero">
+            <div className="container hero-content">
+              <h1>SMC Project Tracker</h1>
+              <h2>प्रकल्प माहिती पोर्टल</h2>
+              <p>Track all civic development projects of Solapur Municipal Corporation — roads, water supply, drainage, parks, and more.</p>
+              <form onSubmit={handleSearch} className="hero-search">
+                <i className="fas fa-search search-icon"></i>
+                <input
+                  type="text"
+                  placeholder="Search projects by name, ward, or location..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+                <button type="submit" className="btn btn-primary">Search</button>
+              </form>
+            </div>
+          </section>
 
-      <section className="stats-row container">
-        <div className="stat-card"><span className="stat-number">{stats.total}</span><span className="stat-label">Total Projects</span></div>
-        <div className="stat-card"><span className="stat-number">{stats.completed}</span><span className="stat-label">Completed</span></div>
-        <div className="stat-card"><span className="stat-number">{stats.inProgress}</span><span className="stat-label">In Progress</span></div>
-        <div className="stat-card"><span className="stat-number">{formatINR(stats.totalBudget)}</span><span className="stat-label">Total Budget</span></div>
-      </section>
+          <section className="stats-row container">
+            <div className="stat-card"><span className="stat-number">{stats.total}</span><span className="stat-label">Total Projects</span></div>
+            <div className="stat-card"><span className="stat-number">{stats.completed}</span><span className="stat-label">Completed</span></div>
+            <div className="stat-card"><span className="stat-number">{stats.inProgress}</span><span className="stat-label">In Progress</span></div>
+            <div className="stat-card"><span className="stat-number">{formatINR(stats.totalBudget)}</span><span className="stat-label">Total Budget</span></div>
+          </section>
+        </>
+      )}
 
       <section className="container">
         <FilterBar filters={filters} onFilterChange={handleFilterChange} />

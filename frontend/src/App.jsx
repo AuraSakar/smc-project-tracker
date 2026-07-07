@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
 import Home from './pages/Home';
+import About from './pages/About';
 import ProjectDetail from './pages/ProjectDetail';
 import Login from './pages/Login';
 import Dashboard from './pages/admin/Dashboard';
@@ -18,6 +19,8 @@ export default function App() {
       <main>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/projects" element={<Home />} />
+          <Route path="/about" element={<About />} />
           <Route path="/projects/:id" element={<ProjectDetail />} />
           <Route path="/login" element={<Login />} />
           <Route path="/admin/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />

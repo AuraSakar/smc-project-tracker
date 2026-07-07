@@ -6,7 +6,7 @@ export default function Footer() {
     <footer className="footer">
       <div className="container footer-content">
         <div className="footer-col">
-          <Link to="/login" className="footer-logo-area">
+          <Link to="/login" className="footer-logo-area" target="_blank" rel="noopener noreferrer">
             <img src="/favicon_smc.png" alt="SMC Logo" className="footer-logo" />
             <h3>Solapur Municipal Corporation</h3>
           </Link>
@@ -19,7 +19,6 @@ export default function Footer() {
           <ul>
             <li><Link to="/">Home</Link></li>
             <li><Link to="/?category=All">All Projects</Link></li>
-            <li><Link to="/login">Admin Login</Link></li>
             <li><a href="https://www.solapurcorporation.gov.in" target="_blank" rel="noopener noreferrer">Contact SMC</a></li>
           </ul>
         </div>
