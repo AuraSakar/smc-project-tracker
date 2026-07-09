@@ -1,0 +1,1 @@
+docker start smc-mongo && echo "MongoDB started successfully"

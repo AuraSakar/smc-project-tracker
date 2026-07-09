@@ -67,6 +67,7 @@ const seed = async () => {
         expectedCompletionDate: '2024-03-31',
         actualCompletionDate: '2024-03-20',
         description: 'Development of a modern garden with seating, fountain, lighting, and children\'s play area.',
+        latitude: 17.6749, longitude: 75.9082,
         officials: [{ name: 'Meena Kulkarni', designation: 'Garden Superintendent', department: 'Garden Department', contactNumber: '' }],
       },
       {
@@ -82,6 +83,7 @@ const seed = async () => {
         startDate: '2024-09-01',
         expectedCompletionDate: '2025-06-30',
         description: 'Underground drainage pipeline replacement to resolve water-logging issues in Murarji Peth area.',
+        latitude: 17.6695, longitude: 75.9189,
         officials: [{ name: 'Anil Shinde', designation: 'Ward Officer', department: 'Engineering', contactNumber: '' }],
       },
       {
@@ -96,6 +98,7 @@ const seed = async () => {
         startDate: '2023-04-01',
         expectedCompletionDate: '2026-03-31',
         description: 'Construction of Phase 2 of the new SMC administrative complex with modern citizen service counters.',
+        latitude: 17.6730, longitude: 75.9038,
         officials: [
           { name: 'Dr. Sachin Ombase', designation: 'Municipal Commissioner', department: 'Administration', contactNumber: '0217-2735293' },
           { name: 'Vinod Salokhe', designation: 'Structural Engineer', department: 'Public Works', contactNumber: '' },
