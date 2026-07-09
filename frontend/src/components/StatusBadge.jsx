@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import './StatusBadge.css';
 
 const statusColors = {
@@ -10,9 +11,10 @@ const statusColors = {
 };
 
 export default function StatusBadge({ status }) {
+  const { t } = useTranslation();
   return (
     <span className="status-badge" style={{ backgroundColor: statusColors[status] || '#555' }}>
-      {status}
+      {t(status)}
     </span>
   );
 }

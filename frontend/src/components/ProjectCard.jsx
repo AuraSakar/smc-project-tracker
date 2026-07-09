@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { formatINR, formatDate } from '../utils/format';
 import StatusBadge from './StatusBadge';
 import './ProjectCard.css';
@@ -14,6 +15,7 @@ const categoryIcons = {
 };
 
 export default function ProjectCard({ project }) {
+  const { t } = useTranslation();
   return (
     <Link to={`/projects/${project._id}`} className="project-card card">
       <div className="card-header">
@@ -31,7 +33,7 @@ export default function ProjectCard({ project }) {
         </p>
       )}
       <p className="card-deadline">
-        <i className="fas fa-calendar-alt"></i> Expected: {formatDate(project.expectedCompletionDate)}
+        <i className="fas fa-calendar-alt"></i> {t('Expected')}: {formatDate(project.expectedCompletionDate)}
       </p>
       <div className="progress-section">
         <div className="progress-bar">
@@ -40,7 +42,7 @@ export default function ProjectCard({ project }) {
         <span className="progress-text">{project.completionPercent}%</span>
       </div>
       <p className="card-budget">{formatINR(project.estimatedCost)}</p>
-      <span className="view-details">View Details <i className="fas fa-arrow-right"></i></span>
+      <span className="view-details">{t('View Details')} <i className="fas fa-arrow-right"></i></span>
     </Link>
   );
 }

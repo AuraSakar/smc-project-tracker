@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import api from '../api/axios';
 import ProjectCard from '../components/ProjectCard';
 import FilterBar from '../components/FilterBar';
@@ -7,6 +8,7 @@ import { formatINR } from '../utils/format';
 import './Home.css';
 
 export default function Home() {
+  const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
   const [projects, setProjects] = useState([]);
   const [stats, setStats] = useState({ total: 0, completed: 0, inProgress: 0, totalBudget: 0 });
@@ -91,27 +93,27 @@ export default function Home() {
         <>
           <section className="hero">
             <div className="container hero-content">
-              <h1>SMC Project Tracker</h1>
+              <h1>{t('Solapur Municipal Corporation')} {t('Project Tracker')}</h1>
               <h2>प्रकल्प माहिती पोर्टल</h2>
-              <p>Track all civic development projects of Solapur Municipal Corporation — roads, water supply, drainage, parks, and more.</p>
+              <p>{t('Hero Description')}</p>
               <form onSubmit={handleSearch} className="hero-search">
                 <i className="fas fa-search search-icon"></i>
                 <input
                   type="text"
-                  placeholder="Search projects by name, ward, or location..."
+                  placeholder={t('Search Placeholder')}
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                 />
-                <button type="submit" className="btn btn-primary">Search</button>
+                <button type="submit" className="btn btn-primary">{t('Search')}</button>
               </form>
             </div>
           </section>
 
           <section className="stats-row container">
-            <div className="stat-card"><span className="stat-number">{stats.total}</span><span className="stat-label">Total Projects</span></div>
-            <div className="stat-card"><span className="stat-number">{stats.completed}</span><span className="stat-label">Completed</span></div>
-            <div className="stat-card"><span className="stat-number">{stats.inProgress}</span><span className="stat-label">In Progress</span></div>
-            <div className="stat-card"><span className="stat-number">{formatINR(stats.totalBudget)}</span><span className="stat-label">Total Budget</span></div>
+            <div className="stat-card"><span className="stat-number">{stats.total}</span><span className="stat-label">{t('Total Projects')}</span></div>
+            <div className="stat-card"><span className="stat-number">{stats.completed}</span><span className="stat-label">{t('Completed')}</span></div>
+            <div className="stat-card"><span className="stat-number">{stats.inProgress}</span><span className="stat-label">{t('In Progress')}</span></div>
+            <div className="stat-card"><span className="stat-number">{formatINR(stats.totalBudget)}</span><span className="stat-label">{t('Total Budget (Cr)')}</span></div>
           </section>
         </>
       )}
@@ -124,7 +126,7 @@ export default function Home() {
         {loading ? (
           <p className="text-center">Loading projects...</p>
         ) : projects.length === 0 ? (
-          <p className="text-center text-muted">No projects found.</p>
+          <p className="text-center text-muted">{t('No projects found')}</p>
         ) : (
           <>
             <div className="grid-3">
