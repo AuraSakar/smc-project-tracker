@@ -139,6 +139,7 @@ smc-project-tracker/
 - **CSS**: Plain CSS with CSS variables, no framework (SMC visual match)
 - **Mobile responsive**: 3-col → 2-col → 1-col breakpoints at 768px and 480px
 - **Home page data fetching**: Uses `useEffect` with `cancelled` flag cleanup to prevent stale state updates on unmounted components. Both projects + stats fetched via `Promise.all` for parallel requests. `search` is included in the dependency array to avoid stale closure bug when navigating back to Home.
+- **Accessibility Toolbar (A11yBar)**: Added at the root level (`App.jsx`) to control global accessibility settings. Manipulates `<html>` classes (`.font-dec`, `.font-inc`, `.wide-spacing`, `.dark-theme`) which trigger global CSS variable overrides in `index.css`. Includes a native Text-to-Speech feature reading the `<main>` element.
 
 ## Routing (React Router v6)
 

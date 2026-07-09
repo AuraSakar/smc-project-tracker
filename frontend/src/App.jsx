@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
+import A11yBar from './components/A11yBar';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -15,6 +16,7 @@ import EditProject from './pages/admin/EditProject';
 export default function App() {
   return (
     <>
+      <A11yBar />
       <Navbar />
       <main>
         <Routes>

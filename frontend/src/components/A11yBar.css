@@ -1,0 +1,81 @@
+#a11y-bar {
+  background: var(--color-primary);
+  padding: 0 2.5rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+  min-height: 40px;
+  position: relative;
+  z-index: 1001;
+  border-bottom: 2px solid var(--color-accent);
+}
+
+@media (max-width: 768px) {
+  #a11y-bar {
+    padding: 0 1.25rem;
+    justify-content: center;
+  }
+}
+
+.ab-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 700;
+  margin-right: 3px;
+  white-space: nowrap;
+}
+
+.ab-sep {
+  width: 1px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 0 10px;
+  flex-shrink: 0;
+}
+
+.ab-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ab-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.9);
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.ab-btn:hover, .ab-btn:focus-visible {
+  background: rgba(255, 255, 255, 0.25);
+  color: #fff;
+}
+
+.ab-btn.on {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #fff;
+}
+
+.ab-btn.theme-active {
+  background: #fff;
+  color: var(--color-primary);
+  border-color: #fff;
+}
+
+.ab-tts-live {
+  margin-left: auto;
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-style: italic;
+  white-space: nowrap;
+}
