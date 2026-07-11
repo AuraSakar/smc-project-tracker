@@ -10,7 +10,7 @@ Full-stack **MERN** application for Solapur Municipal Corporation (SMC) to track
 |----------|--------------------------------------|
 | Frontend | React 18 + Vite 5                   |
 | Backend  | Node.js + Express 4                 |
-| Database | MongoDB + Mongoose 8                |
+| Database | PostgreSQL + Prisma ORM 5           |
 | Auth     | JWT (jsonwebtoken + bcryptjs)       |
 | HTTP     | Axios (interceptors for JWT)        |
 | Forms    | react-hook-form                     |
@@ -24,20 +24,18 @@ Full-stack **MERN** application for Solapur Municipal Corporation (SMC) to track
 ```
 smc-project-tracker/
 ├── backend/
-│   ├── config/db.js                  # MongoDB connection
 │   ├── controllers/
 │   │   ├── authController.js         # login, getMe, register
 │   │   └── projectController.js      # CRUD + addUpdate
 │   ├── middleware/authMiddleware.js   # JWT verify + role checks
-│   ├── models/
-│   │   ├── Project.js                # Full schema with auto projectId
-│   │   └── User.js                   # bcrypt pre-save hook
+│   ├── prisma/
+│   │   └── schema.prisma             # PostgreSQL schema definition
 │   ├── routes/
 │   │   ├── authRoutes.js
 │   │   └── projectRoutes.js
-│   ├── seed.js                       # Superadmin + 5 sample projects
+│   ├── seed.js                       # Superadmin + 5 sample projects (Prisma)
 │   ├── server.js                     # Express entry point
-│   ├── .env                          # PORT, MONGO_URI, JWT_SECRET
+│   ├── .env                          # PORT, DATABASE_URL, JWT_SECRET
 │   └── package.json
 ├── frontend/
 │   ├── public/favicon_smc.png
@@ -131,7 +129,8 @@ smc-project-tracker/
 
 ## Key Design Decisions
 
-- **Project ID** auto-generated as `SMC-YYYY-NNN` via Mongoose `pre('save')` hook
+- **Project ID** auto-generated as `SMC-YYYY-NNN` via the controller during creation
+- **Database** Migrated from MongoDB to **PostgreSQL** using Prisma ORM to ensure strict data compliance for government deployment.
 - **Indian number formatting**: `formatINR()` shows ₹ Cr / ₹ L / ₹ with `en-IN` locale
 - **Dates**: `formatDate()` shows Indian English format (e.g. "15 January 2024")
 - **Admin Login** accessible only via clicking the **footer SMC logo** (intentional, no nav link)
@@ -161,14 +160,15 @@ smc-project-tracker/
 
 ### Prerequisites
 - Node.js 18+
-- MongoDB (e.g., `docker run -d --name smc-mongo -p 27017:27017 mongo:7`)
+- PostgreSQL (running on port 5432)
 
 ### Backend
 ```bash
 cd backend
 npm install
-npm run seed    # Creates superadmin + 5 sample projects
-npm run dev     # Port 5000
+npx prisma db push # Syncs schema to PostgreSQL
+node seed.js       # Creates superadmin + 5 sample projects
+npm run dev        # Port 5000
 ```
 
 ### Frontend
@@ -187,7 +187,7 @@ npm run dev     # Port 5173
 | Variable         | Default                                        |
 |------------------|------------------------------------------------|
 | `PORT`           | `5000`                                         |
-| `MONGO_URI`      | `mongodb://localhost:27017/smc_projects`        |
+| `DATABASE_URL`   | `postgresql://postgres:password@localhost:5432/smc_projects?schema=public` |
 | `JWT_SECRET`     | `your_super_secret_key_here`                   |
 | `JWT_EXPIRES_IN` | `7d`                                           |
 | `NODE_ENV`       | `development`                                  |

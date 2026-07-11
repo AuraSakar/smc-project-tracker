@@ -3,11 +3,8 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
-const connectDB = require('./config/db');
 
 const app = express();
-
-connectDB();
 
 app.use(helmet());
 app.use(cors({ origin: 'http://localhost:5173', credentials: true }));

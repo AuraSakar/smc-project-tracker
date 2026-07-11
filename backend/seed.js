@@ -1,24 +1,31 @@
 require('dotenv').config();
-const mongoose = require('mongoose');
+const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcryptjs');
-const User = require('./models/User');
-const Project = require('./models/Project');
+
+const prisma = new PrismaClient();
 
 const seed = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI);
-    console.log('MongoDB connected for seeding...');
+    console.log('Connecting to PostgreSQL for seeding...');
 
-    await User.deleteMany();
-    await Project.deleteMany();
+    // Clear existing data
+    await prisma.projectOfficial.deleteMany();
+    await prisma.projectDocument.deleteMany();
+    await prisma.projectUpdate.deleteMany();
+    await prisma.project.deleteMany();
+    await prisma.user.deleteMany();
 
-    await User.create({
-      name: 'Super Admin',
-      employeeId: 'SMC001',
-      email: 'admin@solapurcorporation.gov.in',
-      password: 'Admin@123',
-      role: 'superadmin',
-      department: 'Administration',
+    const hashedPassword = await bcrypt.hash('Admin@123', 10);
+
+    await prisma.user.create({
+      data: {
+        name: 'Super Admin',
+        employeeId: 'SMC001',
+        email: 'admin@solapurcorporation.gov.in',
+        password: hashedPassword,
+        role: 'superadmin',
+        department: 'Administration',
+      }
     });
 
     const projects = [
@@ -32,8 +39,8 @@ const seed = async () => {
         completionPercent: 65,
         estimatedCost: 4500000,
         amountSpent: 2900000,
-        startDate: '2024-01-15',
-        expectedCompletionDate: '2024-12-31',
+        startDate: new Date('2024-01-15'),
+        expectedCompletionDate: new Date('2024-12-31'),
         description: 'Four-lane road widening with footpaths, drainage, and street lighting along Hotgi Road.',
         googleMapsLink: 'https://maps.google.com/?q=Hotgi+Road+Solapur',
         latitude: 17.6805, longitude: 75.9064,
@@ -48,8 +55,8 @@ const seed = async () => {
         completionPercent: 0,
         estimatedCost: 25000000,
         amountSpent: 0,
-        startDate: '2024-06-01',
-        expectedCompletionDate: '2026-05-31',
+        startDate: new Date('2024-06-01'),
+        expectedCompletionDate: new Date('2026-05-31'),
         description: 'Restoration and desilting of Siddheshwar Lake to increase water storage capacity and improve water supply.',
         latitude: 17.6845, longitude: 75.9102,
         officials: [{ name: 'Suresh Deshmukh', designation: 'Water Supply Engineer', department: 'Water Works', contactNumber: '0217-2735293' }],
@@ -63,9 +70,9 @@ const seed = async () => {
         completionPercent: 100,
         estimatedCost: 1200000,
         amountSpent: 1180000,
-        startDate: '2023-10-01',
-        expectedCompletionDate: '2024-03-31',
-        actualCompletionDate: '2024-03-20',
+        startDate: new Date('2023-10-01'),
+        expectedCompletionDate: new Date('2024-03-31'),
+        actualCompletionDate: new Date('2024-03-20'),
         description: 'Development of a modern garden with seating, fountain, lighting, and children\'s play area.',
         latitude: 17.6749, longitude: 75.9082,
         officials: [{ name: 'Meena Kulkarni', designation: 'Garden Superintendent', department: 'Garden Department', contactNumber: '' }],
@@ -80,8 +87,8 @@ const seed = async () => {
         completionPercent: 0,
         estimatedCost: 3200000,
         amountSpent: 0,
-        startDate: '2024-09-01',
-        expectedCompletionDate: '2025-06-30',
+        startDate: new Date('2024-09-01'),
+        expectedCompletionDate: new Date('2025-06-30'),
         description: 'Underground drainage pipeline replacement to resolve water-logging issues in Murarji Peth area.',
         latitude: 17.6695, longitude: 75.9189,
         officials: [{ name: 'Anil Shinde', designation: 'Ward Officer', department: 'Engineering', contactNumber: '' }],
@@ -95,8 +102,8 @@ const seed = async () => {
         completionPercent: 40,
         estimatedCost: 120000000,
         amountSpent: 48000000,
-        startDate: '2023-04-01',
-        expectedCompletionDate: '2026-03-31',
+        startDate: new Date('2023-04-01'),
+        expectedCompletionDate: new Date('2026-03-31'),
         description: 'Construction of Phase 2 of the new SMC administrative complex with modern citizen service counters.',
         latitude: 17.6730, longitude: 75.9038,
         officials: [
@@ -106,16 +113,33 @@ const seed = async () => {
       },
     ];
 
+    let count = 1;
     for (const proj of projects) {
-      await Project.create(proj);
+      const year = new Date().getFullYear();
+      const projectId = `SMC-${year}-${String(count).padStart(3, '0')}`;
+      
+      const { officials, ...projectData } = proj;
+
+      await prisma.project.create({
+        data: {
+          ...projectData,
+          projectId,
+          officials: {
+            create: officials,
+          }
+        }
+      });
+      count++;
     }
 
-    console.log('Seed data inserted successfully!');
+    console.log('Seed data inserted successfully into PostgreSQL!');
     console.log('Default superadmin: employeeId=SMC001, password=Admin@123');
     process.exit(0);
   } catch (error) {
     console.error('Seeding failed:', error);
     process.exit(1);
+  } finally {
+    await prisma.$disconnect();
   }
 };
 
