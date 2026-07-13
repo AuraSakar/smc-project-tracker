@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
+import { useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../api/axios';
 import ProjectTable from '../../components/ProjectTable';
@@ -13,7 +14,9 @@ export default function ManageProjects() {
   const [status, setStatus] = useState('');
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [search, setSearch] = useState('');
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const [search, setSearch] = useState(queryParams.get('search') || '');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
@@ -73,8 +76,7 @@ export default function ManageProjects() {
   };
 
   return (
-    <div className="manage-projects page-wrapper">
-      <div className="container">
+    <div className="manage-projects">
         <h1>Manage Projects</h1>
 
         <div className="manage-filters">
@@ -117,7 +119,6 @@ export default function ManageProjects() {
             )}
           </>
         )}
-      </div>
 
       {showDeleteModal && (
         <div className="modal-overlay" onClick={() => setShowDeleteModal(false)}>

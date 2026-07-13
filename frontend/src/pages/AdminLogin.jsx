@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
-import './Login.css';
+import './AdminLogin.css';
 
 export default function Login() {
   const { login, isAuthenticated } = useAuth();

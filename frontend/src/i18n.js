@@ -93,7 +93,29 @@ const resources = {
 
       // Project Card
       "Expected": "Expected",
-      "View Details": "View Details"
+      "View Details": "View Details",
+
+      // Admin Layout & Login Selector
+      "Portal Login": "Portal Login",
+      "Select your portal to continue": "Select your portal to continue",
+      "Access the main project management dashboard (Superadmin & Admins).": "Access the main project management dashboard (Superadmin & Admins).",
+      "Go to Admin Login": "Go to Admin Login",
+      "Department Login": "Department Login",
+      "Access department-specific tools and updates.": "Access department-specific tools and updates.",
+      "Go to Department Login": "Go to Department Login",
+      "Coming Soon": "Coming Soon",
+      "The department login portal is currently under development. Please check back later.": "The department login portal is currently under development. Please check back later.",
+      "Back to Login Selector": "Back to Login Selector",
+      "Project Management System": "Project Management System",
+      "Logout": "Logout",
+      "Dashboard": "Dashboard",
+      "Projects": "Projects",
+      "Add new Project": "Add new Project",
+      "Manage Projects": "Manage Projects",
+      "Project Title": "Project Title",
+      "Manage Project": "Manage Project",
+      "Report": "Report",
+      "Reporting features coming soon.": "Reporting features coming soon."
     }
   },
   mr: {
@@ -186,7 +208,29 @@ const resources = {
 
       // Project Card
       "Expected": "अपेक्षित",
-      "View Details": "तपशील पहा"
+      "View Details": "तपशील पहा",
+
+      // Admin Layout & Login Selector
+      "Portal Login": "पोर्टल लॉगिन",
+      "Select your portal to continue": "सुरू ठेवण्यासाठी आपले पोर्टल निवडा",
+      "Access the main project management dashboard (Superadmin & Admins).": "मुख्य प्रकल्प व्यवस्थापन डॅशबोर्डमध्ये प्रवेश करा (सुपरॅडमिन आणि ॲडमिन).",
+      "Go to Admin Login": "प्रशासन लॉगिनवर जा",
+      "Department Login": "विभाग लॉगिन",
+      "Access department-specific tools and updates.": "विभागाशी संबंधित साधने आणि अद्यतनांमध्ये प्रवेश करा.",
+      "Go to Department Login": "विभाग लॉगिनवर जा",
+      "Coming Soon": "लवकरच येत आहे",
+      "The department login portal is currently under development. Please check back later.": "विभाग लॉगिन पोर्टल सध्या विकसित होत आहे. कृपया नंतर तपासा.",
+      "Back to Login Selector": "लॉगिन सिलेक्टरकडे परत",
+      "Project Management System": "प्रकल्प व्यवस्थापन प्रणाली",
+      "Logout": "लॉग आउट",
+      "Dashboard": "डॅशबोर्ड",
+      "Projects": "प्रकल्प",
+      "Add new Project": "नवीन प्रकल्प जोडा",
+      "Manage Projects": "प्रकल्प व्यवस्थापित करा",
+      "Project Title": "प्रकल्प शीर्षक",
+      "Manage Project": "प्रकल्प व्यवस्थापित करा",
+      "Report": "अहवाल",
+      "Reporting features coming soon.": "अहवाल वैशिष्ट्ये लवकरच येत आहेत."
     }
   }
 };

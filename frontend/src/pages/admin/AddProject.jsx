@@ -115,8 +115,7 @@ export default function ProjectForm() {
   if (loading && isEdit) return <div className="page-wrapper text-center">Loading...</div>;
 
   return (
-    <div className="project-form-page page-wrapper">
-      <div className="container">
+    <div className="project-form-page">
         <h1>{isEdit ? 'Edit Project' : 'Add New Project'}</h1>
         <form onSubmit={handleSubmit(onSubmit)} className="project-form">
           <div className="form-section">
@@ -279,7 +278,6 @@ export default function ProjectForm() {
             </button>
           </div>
         </form>
-      </div>
     </div>
   );
 }

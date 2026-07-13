@@ -1,0 +1,19 @@
+.department-login-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.coming-soon-message {
+  text-align: center;
+  padding: 2rem;
+  background-color: rgba(232, 119, 34, 0.1); /* light accent color */
+  border: 1px dashed var(--color-accent);
+  border-radius: 8px;
+  color: var(--color-text);
+}
+
+.coming-soon-message h3 {
+  color: var(--color-accent);
+  margin-bottom: 0.5rem;
+}

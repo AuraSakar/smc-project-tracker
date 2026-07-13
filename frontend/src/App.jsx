@@ -1,34 +1,38 @@
 import { Routes, Route } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import A11yBar from './components/A11yBar';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
+import PublicLayout from './layouts/PublicLayout';
+import AdminLayout from './layouts/AdminLayout';
+
+// Public pages
 import Home from './pages/Home';
 import About from './pages/About';
 import ProjectDetail from './pages/ProjectDetail';
-import Login from './pages/Login';
+import LoginSelector from './pages/LoginSelector';
+import AdminLogin from './pages/AdminLogin';
+import DepartmentLogin from './pages/DepartmentLogin';
+
+// Admin pages
 import Dashboard from './pages/admin/Dashboard';
+import ProjectList from './pages/admin/ProjectList';
 import ManageProjects from './pages/admin/ManageProjects';
 import AddProject from './pages/admin/AddProject';
 import EditProject from './pages/admin/EditProject';
+import Report from './pages/admin/Report';
 
 export default function App() {
   return (
     <>
-      <A11yBar />
-      <Navbar />
-      <main>
-        <Routes>
+      <Routes>
+        {/* Public Routes with Navbar and Footer */}
+        <Route element={<PublicLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/projects" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/projects/:id" element={<ProjectDetail />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/admin/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-          <Route path="/admin/projects" element={<ProtectedRoute><ManageProjects /></ProtectedRoute>} />
-          <Route path="/admin/projects/add" element={<ProtectedRoute><AddProject /></ProtectedRoute>} />
-          <Route path="/admin/projects/edit/:id" element={<ProtectedRoute><EditProject /></ProtectedRoute>} />
+          <Route path="/login" element={<LoginSelector />} />
+          <Route path="/login/admin" element={<AdminLogin />} />
+          <Route path="/login/department" element={<DepartmentLogin />} />
           <Route path="*" element={
             <div className="page-wrapper text-center">
               <h1>404</h1>
@@ -36,9 +40,18 @@ export default function App() {
               <a href="/" className="btn btn-primary mt-2">Go Home</a>
             </div>
           } />
-        </Routes>
-      </main>
-      <Footer />
+        </Route>
+
+        {/* Admin Routes with Shell Layout */}
+        <Route element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
+          <Route path="/admin/dashboard" element={<Dashboard />} />
+          <Route path="/admin/projects-list" element={<ProjectList />} />
+          <Route path="/admin/projects" element={<ManageProjects />} />
+          <Route path="/admin/projects/add" element={<AddProject />} />
+          <Route path="/admin/projects/edit/:id" element={<EditProject />} />
+          <Route path="/admin/report" element={<Report />} />
+        </Route>
+      </Routes>
       <ToastContainer position="top-right" theme="colored" />
     </>
   );

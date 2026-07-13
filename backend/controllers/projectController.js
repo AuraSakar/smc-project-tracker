@@ -13,6 +13,7 @@ exports.getProjects = async (req, res, next) => {
       where.OR = [
         { title: { contains: search, mode: 'insensitive' } },
         { description: { contains: search, mode: 'insensitive' } },
+        { projectId: { equals: search } },
       ];
     }
 

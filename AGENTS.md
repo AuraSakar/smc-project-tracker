@@ -51,15 +51,21 @@ smc-project-tracker/
 │   │   │   ├── StatusBadge.jsx/.css  # Color-coded status pill
 │   │   │   ├── FilterBar.jsx         # Category/Status/Ward filters
 │   │   │   └── ProtectedRoute.jsx    # Auth gate for /admin/*
+│   │   ├── layouts/
+│   │   │   ├── PublicLayout.jsx      # Public shell (A11y, Navbar, Footer)
+│   │   │   ├── AdminLayout.jsx/.css  # Admin shell (Sidebar, Header, A11y)
 │   │   ├── pages/
 │   │   │   ├── Home.jsx/.css         # Landing: hero, stats, cards
 │   │   │   ├── ProjectDetail.jsx/.css # Full project view + map + timeline
-│   │   │   ├── Login.jsx/.css        # Employee ID + Password login
+│   │   │   ├── LoginSelector.jsx/.css # Chooser: Admin vs Department
+│   │   │   ├── AdminLogin.jsx/.css    # Employee ID + Password login
+│   │   │   ├── DepartmentLogin.jsx/.css # Placeholder for department login
 │   │   │   └── admin/
 │   │   │       ├── Dashboard.jsx/.css      # Stats + quick actions
 │   │   │       ├── ManageProjects.jsx/.css # Table + delete/add-update modals
 │   │   │       ├── AddProject.jsx          # Form (shared with Edit)
 │   │   │       ├── EditProject.jsx         # Re-exports AddProject
+│   │   │       ├── Report.jsx              # Stub report page
 │   │   │       └── ProjectForm.css         # Form styling
 │   │   ├── App.jsx                  # Route definitions
 │   │   ├── main.jsx                 # Entry with BrowserRouter + AuthProvider
@@ -102,6 +108,7 @@ smc-project-tracker/
 ## Role-Based Access
 
 - **viewer**: Can view public pages only (no admin access)
+- **department**: Scaffolded (coming soon for department-specific data entry)
 - **admin**: Can create/update projects, add updates. Protected by `requireAdmin` middleware.
 - **superadmin**: Can delete projects + create users. Protected by `requireSuperAdmin` middleware.
 
@@ -149,11 +156,14 @@ smc-project-tracker/
 | `/projects`              | Home (filtered)| Public  |
 | `/about`                 | About          | Public  |
 | `/projects/:id`          | ProjectDetail  | Public  |
-| `/login`                 | Login          | Public  |
+| `/login`                 | LoginSelector  | Public  |
+| `/login/admin`           | AdminLogin     | Public  |
+| `/login/department`      | DepartmentLogin| Public  |
 | `/admin/dashboard`       | Dashboard      | Auth    |
 | `/admin/projects`        | ManageProjects | Auth    |
 | `/admin/projects/add`    | AddProject     | Auth    |
 | `/admin/projects/edit/:id` | EditProject  | Auth    |
+| `/admin/report`          | Report         | Auth    |
 | `*`                      | 404 Page       | Public  |
 
 ## How to Run
