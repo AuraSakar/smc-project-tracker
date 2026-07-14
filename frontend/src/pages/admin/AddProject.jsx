@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../api/axios';
+import LocationPickerMap from '../../components/LocationPickerMap';
 import './ProjectForm.css';
 
 const categories = ['Road', 'Water Supply', 'Drainage', 'Park/Garden', 'Building', 'Electricity', 'Other'];
@@ -22,7 +23,7 @@ export default function ProjectForm() {
   const [documents, setDocuments] = useState([{ name: '', url: '' }]);
   const [updateNote, setUpdateNote] = useState('');
 
-  const { register, handleSubmit, setValue, formState: { errors } } = useForm();
+  const { register, handleSubmit, setValue, getValues, formState: { errors } } = useForm();
 
   useEffect(() => {
     if (isEdit) {
@@ -168,19 +169,33 @@ export default function ProjectForm() {
             </div>
             <div className="form-group">
               <label>Google Maps Link</label>
-              <input {...register('googleMapsLink')} placeholder="https://maps.google.com/?q=..." />
+              <input {...register('googleMapsLink')} placeholder="Auto-filled from map" readOnly style={{backgroundColor: '#e9ecef', color: '#666', cursor: 'not-allowed'}} />
             </div>
             <div className="form-row">
               <div className="form-group">
                 <label>Latitude</label>
-                <input type="number" step="any" {...register('latitude')} />
+                <input type="number" step="any" {...register('latitude')} readOnly style={{backgroundColor: '#e9ecef', color: '#666', cursor: 'not-allowed'}} />
               </div>
               <div className="form-group">
                 <label>Longitude</label>
-                <input type="number" step="any" {...register('longitude')} />
+                <input type="number" step="any" {...register('longitude')} readOnly style={{backgroundColor: '#e9ecef', color: '#666', cursor: 'not-allowed'}} />
               </div>
             </div>
-            <p className="help-text">Tip: Open Google Maps, right-click on location, copy coordinates</p>
+            
+            <div className="form-group" style={{marginTop: '1rem'}}>
+              <label>Interactive Map Picker</label>
+              {!loading && (
+                <LocationPickerMap 
+                  initialLat={getValues('latitude')} 
+                  initialLng={getValues('longitude')}
+                  onLocationChange={(lat, lng, link) => {
+                    setValue('latitude', lat);
+                    setValue('longitude', lng);
+                    setValue('googleMapsLink', link);
+                  }}
+                />
+              )}
+            </div>
           </div>
 
           <div className="form-section">

@@ -31,18 +31,20 @@ export default function ProjectTable({ projects, onDelete, onAddUpdate, isSuperA
               <td><StatusBadge status={p.status} /></td>
               <td>{formatDate(p.startDate)}</td>
               <td>{formatDate(p.expectedCompletionDate)}</td>
-              <td className="actions-cell">
-                <button className="btn-icon" title="Edit" onClick={() => navigate(`/admin/projects/edit/${p._id}`)}>
-                  <i className="fas fa-edit"></i>
-                </button>
-                <button className="btn-icon" title="Add Update" onClick={() => onAddUpdate(p)}>
-                  <i className="fas fa-plus"></i>
-                </button>
-                {isSuperAdmin && (
-                  <button className="btn-icon btn-icon-danger" title="Delete" onClick={() => onDelete(p)}>
-                    <i className="fas fa-trash"></i>
+              <td>
+                <div className="actions-cell">
+                  <button className="btn-icon" title="Edit" onClick={() => navigate(`/admin/projects/edit/${p._id}`)}>
+                    <i className="fas fa-edit"></i>
                   </button>
-                )}
+                  <button className="btn-icon" title="Add Update" onClick={() => onAddUpdate(p)}>
+                    <i className="fas fa-plus"></i>
+                  </button>
+                  {isSuperAdmin && (
+                    <button className="btn-icon btn-icon-danger" title="Delete" onClick={() => onDelete(p)}>
+                      <i className="fas fa-trash"></i>
+                    </button>
+                  )}
+                </div>
               </td>
             </tr>
           ))}
