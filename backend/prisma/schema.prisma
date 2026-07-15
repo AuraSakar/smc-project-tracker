@@ -76,3 +76,20 @@ model ProjectUpdate {
   projectId String
   project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
 }
+
+model OfficialMaster {
+  id            String   @id @default(uuid())
+  name          String
+  designation   String
+  department    String?
+  contactNumber String?
+  createdAt     DateTime @default(now())
+}
+
+model ContractorMaster {
+  id            String   @id @default(uuid())
+  firmName      String
+  contactPerson String?
+  contactNumber String?
+  createdAt     DateTime @default(now())
+}

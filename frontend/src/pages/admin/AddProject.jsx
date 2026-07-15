@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../api/axios';
 import LocationPickerMap from '../../components/LocationPickerMap';
+import { formatINR } from '../../utils/format';
 import './ProjectForm.css';
 
 const categories = ['Road', 'Water Supply', 'Drainage', 'Park/Garden', 'Building', 'Electricity', 'Other'];
@@ -23,7 +24,24 @@ export default function ProjectForm() {
   const [documents, setDocuments] = useState([{ name: '', url: '' }]);
   const [updateNote, setUpdateNote] = useState('');
 
-  const { register, handleSubmit, setValue, getValues, formState: { errors } } = useForm();
+  const [masterOfficials, setMasterOfficials] = useState([]);
+  const [masterContractors, setMasterContractors] = useState([]);
+  
+  const { register, handleSubmit, setValue, getValues, watch, formState: { errors } } = useForm();
+  
+  const estCost = watch('estimatedCost');
+  const amtSpent = watch('amountSpent');
+  const overrun = (Number(amtSpent) || 0) - (Number(estCost) || 0);
+
+  useEffect(() => {
+    api.get('/officials')
+      .then(res => setMasterOfficials(res.data.officials || []))
+      .catch(err => console.error("Failed to fetch officials", err));
+
+    api.get('/contractors')
+      .then(res => setMasterContractors(res.data.contractors || []))
+      .catch(err => console.error("Failed to fetch contractors", err));
+  }, []);
 
   useEffect(() => {
     if (isEdit) {
@@ -63,6 +81,18 @@ export default function ProjectForm() {
   const updateOfficial = (i, field, value) => {
     const updated = [...officials];
     updated[i][field] = value;
+    setOfficials(updated);
+  };
+
+  const handleOfficialSelect = (i, selectedName) => {
+    const selected = masterOfficials.find(o => o.name === selectedName);
+    const updated = [...officials];
+    updated[i].name = selectedName;
+    if (selected) {
+      updated[i].designation = selected.designation || '';
+      updated[i].department = selected.department || '';
+      updated[i].contactNumber = selected.contactNumber || '';
+    }
     setOfficials(updated);
   };
 
@@ -156,7 +186,7 @@ export default function ProjectForm() {
           </div>
 
           <div className="form-section">
-            <h2>Location</h2>
+            <h2>Site Location</h2>
             <div className="form-row">
               <div className="form-group">
                 <label>From Location *</label>
@@ -228,9 +258,23 @@ export default function ProjectForm() {
                 <input type="number" {...register('amountSpent')} />
               </div>
             </div>
+            
+            {overrun > 0 && (
+              <div className="form-group" style={{ backgroundColor: 'rgba(220, 53, 69, 0.1)', padding: '1rem', borderRadius: '6px', border: '1px solid var(--color-danger)' }}>
+                <label style={{ color: 'var(--color-danger)', fontWeight: 'bold', fontSize: '1.1rem', margin: 0 }}>
+                  <i className="fas fa-exclamation-triangle"></i> Over Budget By: {formatINR(overrun)}
+                </label>
+              </div>
+            )}
             <div className="form-group">
               <label>Contractor Name</label>
-              <input {...register('contractor')} />
+              <select {...register('contractor')}>
+                <option value="">Select Contractor Firm...</option>
+                {watch('contractor') && !masterContractors.find(c => c.firmName === watch('contractor')) && (
+                  <option value={watch('contractor')}>{watch('contractor')} (Legacy)</option>
+                )}
+                {masterContractors.map(c => <option key={c.id} value={c.firmName}>{c.firmName}</option>)}
+              </select>
             </div>
           </div>
 
@@ -238,7 +282,13 @@ export default function ProjectForm() {
             <h2>Officials <button type="button" className="btn btn-outline btn-sm" onClick={addOfficial}><i className="fas fa-plus"></i> Add Official</button></h2>
             {officials.map((off, i) => (
               <div key={i} className="official-row">
-                <input placeholder="Name" value={off.name} onChange={(e) => updateOfficial(i, 'name', e.target.value)} />
+                <select value={off.name} onChange={(e) => handleOfficialSelect(i, e.target.value)} style={{flex: 1}}>
+                  <option value="">Select Official...</option>
+                  {off.name && !masterOfficials.find(mo => mo.name === off.name) && (
+                    <option value={off.name}>{off.name} (Legacy)</option>
+                  )}
+                  {masterOfficials.map(mo => <option key={mo.id} value={mo.name}>{mo.name}</option>)}
+                </select>
                 <input placeholder="Designation" value={off.designation} onChange={(e) => updateOfficial(i, 'designation', e.target.value)} />
                 <input placeholder="Department" value={off.department} onChange={(e) => updateOfficial(i, 'department', e.target.value)} />
                 <input placeholder="Contact" value={off.contactNumber} onChange={(e) => updateOfficial(i, 'contactNumber', e.target.value)} />
@@ -256,7 +306,7 @@ export default function ProjectForm() {
           </div>
 
           <div className="form-section">
-            <h2>Images <button type="button" className="btn btn-outline btn-sm" onClick={addImage}><i className="fas fa-plus"></i> Add Image URL</button></h2>
+            <h2>Work Status Images <button type="button" className="btn btn-outline btn-sm" onClick={addImage}><i className="fas fa-plus"></i> Add Image URL</button></h2>
             {images.map((img, i) => (
               <div key={i} className="array-row">
                 <input placeholder="Image URL" value={img} onChange={(e) => updateImage(i, e.target.value)} />

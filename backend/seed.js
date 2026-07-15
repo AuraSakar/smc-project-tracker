@@ -13,6 +13,8 @@ const seed = async () => {
     await prisma.projectDocument.deleteMany();
     await prisma.projectUpdate.deleteMany();
     await prisma.project.deleteMany();
+    await prisma.contractorMaster.deleteMany();
+    await prisma.officialMaster.deleteMany();
     await prisma.user.deleteMany();
 
     const hashedPassword = await bcrypt.hash('Admin@123', 10);
@@ -26,6 +28,31 @@ const seed = async () => {
         role: 'superadmin',
         department: 'Administration',
       }
+    });
+
+    const masterOfficials = [
+      { name: 'Rajesh Patil', designation: 'City Engineer', department: 'Public Works', contactNumber: '0217-2740335' },
+      { name: 'Suresh Deshmukh', designation: 'Water Supply Engineer', department: 'Water Works', contactNumber: '0217-2735293' },
+      { name: 'Meena Kulkarni', designation: 'Garden Superintendent', department: 'Garden Department', contactNumber: '0217-2740111' },
+      { name: 'Anil Shinde', designation: 'Ward Officer', department: 'Engineering', contactNumber: '0217-2740222' },
+      { name: 'Dr. Sachin Ombase', designation: 'Municipal Commissioner', department: 'Administration', contactNumber: '0217-2735293' },
+      { name: 'Vinod Salokhe', designation: 'Structural Engineer', department: 'Public Works', contactNumber: '0217-2740334' },
+      { name: 'Priya Joshi', designation: 'Town Planner', department: 'Town Planning', contactNumber: '0217-2740444' }
+    ];
+
+    await prisma.officialMaster.createMany({
+      data: masterOfficials
+    });
+
+    const masterContractors = [
+      { firmName: 'ABC Constructions', contactPerson: 'Ramesh Sharma', contactNumber: '9876543210' },
+      { firmName: 'Solapur Infra Projects', contactPerson: 'Vikram Jadhav', contactNumber: '9876543211' },
+      { firmName: 'BuildWell Pvt Ltd', contactPerson: 'Sunil Verma', contactNumber: '9876543212' },
+      { firmName: 'Metro Builders', contactPerson: 'Amit Kumar', contactNumber: '9876543213' }
+    ];
+
+    await prisma.contractorMaster.createMany({
+      data: masterContractors
     });
 
     const projects = [

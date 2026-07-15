@@ -99,7 +99,7 @@
   margin-bottom: 0.75rem; 
 }
 
-.official-row input, .array-row input { 
+.official-row input, .official-row select, .array-row input { 
   flex: 1; 
   padding: 0.75rem; 
   border: 1px solid var(--color-border); 
@@ -108,7 +108,7 @@
   transition: all 0.2s;
 }
 
-.official-row input:focus, .array-row input:focus {
+.official-row input:focus, .official-row select:focus, .array-row input:focus {
   border-color: var(--color-primary);
   background-color: #fff;
   outline: none;
