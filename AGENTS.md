@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-Full-stack **MERN** application for Solapur Municipal Corporation (SMC) to track civic projects publicly and manage them via an admin panel. Embeds visually with SMC's existing website.
+Full-stack **MERN** application for Solapur Municipal Corporation (SMC) to track civic projects publicly and manage them via an admin panel & department billing portal. Embeds visually with SMC's existing website.
 
 ## Tech Stack
 
@@ -26,14 +26,14 @@ smc-project-tracker/
 ├── backend/
 │   ├── controllers/
 │   │   ├── authController.js         # login, getMe, register
-│   │   └── projectController.js      # CRUD + addUpdate
-│   ├── middleware/authMiddleware.js   # JWT verify + role checks
+│   │   └── projectController.js      # CRUD + addUpdate + Billing endpoints
+│   ├── middleware/authMiddleware.js   # JWT verify + requireAdmin + requireDepartment + requireSuperAdmin
 │   ├── prisma/
-│   │   └── schema.prisma             # PostgreSQL schema definition
+│   │   └── schema.prisma             # PostgreSQL schema definition (User, Project, ProjectBill, etc.)
 │   ├── routes/
 │   │   ├── authRoutes.js
 │   │   └── projectRoutes.js
-│   ├── seed.js                       # Superadmin + 5 sample projects (Prisma)
+│   ├── seed.js                       # Superadmin, Department user + 5 sample projects with bills (Prisma)
 │   ├── server.js                     # Express entry point
 │   ├── .env                          # PORT, DATABASE_URL, JWT_SECRET
 │   └── package.json
@@ -41,7 +41,7 @@ smc-project-tracker/
 │   ├── public/favicon_smc.png
 │   ├── src/
 │   │   ├── api/axios.js              # Axios instance + JWT interceptor
-│   │   ├── context/AuthContext.jsx    # Auth state provider
+│   │   ├── context/AuthContext.jsx    # Auth state provider (isAdmin, isDepartment, etc.)
 │   │   ├── utils/format.js           # formatINR(), formatDate()
 │   │   ├── components/
 │   │   │   ├── Navbar.jsx/.css       # Two-tier SMC-style navbar
@@ -50,16 +50,19 @@ smc-project-tracker/
 │   │   │   ├── ProjectTable.jsx/.css # Admin project table
 │   │   │   ├── StatusBadge.jsx/.css  # Color-coded status pill
 │   │   │   ├── FilterBar.jsx         # Category/Status/Ward filters
-│   │   │   └── ProtectedRoute.jsx    # Auth gate for /admin/*
+│   │   │   └── ProtectedRoute.jsx    # Auth gate for /admin/* and /department/*
 │   │   ├── layouts/
 │   │   │   ├── PublicLayout.jsx      # Public shell (A11y, Navbar, Footer)
 │   │   │   ├── AdminLayout.jsx/.css  # Admin shell (Sidebar, Header, A11y)
+│   │   │   ├── DepartmentLayout.jsx/.css # Department shell (Sidebar, Header, A11y)
 │   │   ├── pages/
 │   │   │   ├── Home.jsx/.css         # Landing: hero, stats, cards
-│   │   │   ├── ProjectDetail.jsx/.css # Full project view + map + timeline
+│   │   │   ├── ProjectDetail.jsx/.css # Full project view + map + timeline + public bills table
 │   │   │   ├── LoginSelector.jsx/.css # Chooser: Admin vs Department
-│   │   │   ├── AdminLogin.jsx/.css    # Employee ID + Password login
-│   │   │   ├── DepartmentLogin.jsx/.css # Placeholder for department login
+│   │   │   ├── AdminLogin.jsx/.css    # Admin Employee ID + Password login
+│   │   │   ├── DepartmentLogin.jsx/.css # Department login form
+│   │   │   ├── department/
+│   │   │   │   └── DepartmentDashboard.jsx/.css # Department billing management portal & bill CRUD
 │   │   │   └── admin/
 │   │   │       ├── Dashboard.jsx/.css      # Stats + quick actions
 │   │   │       ├── ManageProjects.jsx/.css # Table + delete/add-update modals
@@ -96,20 +99,20 @@ smc-project-tracker/
 
 ## Authentication Flow
 
-1. User clicks **Footer SMC logo** → navigates to `/login`
+1. User clicks **Footer SMC logo** → navigates to `/login` (Chooser for Admin vs Department)
 2. POST `/api/auth/login` with `employeeId` + `password`
-3. Returns JWT token (7d expiry) + user object
+3. Returns JWT token (7d expiry) + user object (including `role` and `department`)
 4. Token stored in `localStorage` as `smc_token`
-5. `AuthContext` provides `user`, `token`, `login()`, `logout()`, `isAuthenticated`, `isAdmin`, `isSuperAdmin`
-6. `ProtectedRoute` wraps `/admin/*` — redirects to `/login` if not authenticated
+5. `AuthContext` provides `user`, `token`, `login()`, `logout()`, `isAuthenticated`, `isAdmin`, `isDepartment`, `isSuperAdmin`
+6. `ProtectedRoute` wraps `/admin/*` and `/department/*` — redirects to `/login` if not authenticated
 7. Axios interceptor in `api/axios.js` auto-attaches `Authorization: Bearer <token>` header
 8. On 401, clears token + redirects to `/login`
 
 ## Role-Based Access
 
-- **viewer**: Can view public pages only (no admin access)
-- **department**: Scaffolded (coming soon for department-specific data entry)
-- **admin**: Can create/update projects, add updates. Protected by `requireAdmin` middleware.
+- **viewer**: Can view public pages only (no admin/department access)
+- **department**: Can manage (add/remove) project bills via Department Portal (`/department/dashboard`). Protected by `requireDepartment` middleware.
+- **admin**: Can create/update projects, add updates, manage bills. Protected by `requireAdmin` middleware.
 - **superadmin**: Can delete projects + create users. Protected by `requireSuperAdmin` middleware.
 
 ## API Endpoints
@@ -122,49 +125,52 @@ smc-project-tracker/
 | POST   | `/register`   | Superadmin  | Create new user            |
 
 ### Projects (`/api/projects`)
-| Method | Endpoint         | Auth   | Description                       |
-|--------|------------------|--------|-----------------------------------|
-| GET    | `/`              | Public | List projects (filters + pagination) |
-| GET    | `/:id`           | Public | Single project detail             |
-| POST   | `/`              | Admin  | Create project (auto-generates projectId) |
-| PUT    | `/:id`           | Admin  | Update project                    |
-| DELETE | `/:id`           | SA     | Delete project                    |
-| POST   | `/:id/updates`   | Admin  | Add update note to project        |
+| Method | Endpoint                  | Auth        | Description                               |
+|--------|---------------------------|-------------|-------------------------------------------|
+| GET    | `/`                       | Public      | List projects (filters + pagination)      |
+| GET    | `/:id`                    | Public      | Single project detail (includes bills)    |
+| POST   | `/`                       | Admin       | Create project (auto-generates projectId) |
+| PUT    | `/:id`                    | Admin       | Update project                            |
+| DELETE | `/:id`                    | SA          | Delete project                            |
+| POST   | `/:id/updates`            | Admin       | Add update note to project                |
+| GET    | `/:id/bills`              | Public      | Get all bills issued for a project        |
+| POST   | `/:id/bills`              | Department  | Add/issue a new bill for a project        |
+| DELETE | `/:id/bills/:billId`      | Department  | Remove a bill for a project               |
 
 ### Query Params for GET `/api/projects`
 `?category=Road&status=In Progress&ward=Ward No. 5&search=hotgi&page=1&limit=10`
 
 ## Key Design Decisions
 
-- **Project ID** auto-generated as `SMC-YYYY-NNN` via the controller during creation
-- **Database** Migrated from MongoDB to **PostgreSQL** using Prisma ORM to ensure strict data compliance for government deployment.
-- **Indian number formatting**: `formatINR()` shows ₹ Cr / ₹ L / ₹ with `en-IN` locale
-- **Dates**: `formatDate()` shows Indian English format (e.g. "15 January 2024")
-- **Admin Login** accessible only via clicking the **footer SMC logo** (intentional, no nav link)
-- **Shared form**: AddProject and EditProject use the same component (EditProject re-exports AddProject)
-- **CSS**: Plain CSS with CSS variables, no framework (SMC visual match)
-- **Mobile responsive**: 3-col → 2-col → 1-col breakpoints at 768px and 480px
-- **Home page data fetching**: Uses `useEffect` with `cancelled` flag cleanup to prevent stale state updates on unmounted components. Both projects + stats fetched via `Promise.all` for parallel requests. `search` is included in the dependency array to avoid stale closure bug when navigating back to Home.
-- **Accessibility Toolbar (A11yBar)**: Added at the root level (`App.jsx`) to control global accessibility settings. Manipulates `<html>` classes (`.font-dec`, `.font-inc`, `.wide-spacing`, `.dark-theme`) which trigger global CSS variable overrides in `index.css`. Includes a native Text-to-Speech feature reading the `<main>` element.
-- **Internationalization (i18n)**: Implemented using `react-i18next` and `i18next-browser-languagedetector`. All static UI text (headers, footers, buttons, filters) is translatable between English (`en`) and Marathi (`mr`). Translations are stored in `frontend/src/i18n.js`. Components use the `useTranslation` hook (`t('Key')`). User's language preference is persisted in `localStorage` via the language detector.
+- **Project Bills Table**: Displays all issued bills with columns: `Sr. No.`, `Bill No.`, `RA Bill`, `Bill Details`, `Amount` (INR). Access to add/remove bills is granted exclusively to Department users/Admins via the Department Login portal (`/department/dashboard`). All issued bills are publicly visible under `/projects/:id`.
+- **Project ID** auto-generated as `SMC-YYYY-NNN` via the controller during creation.
+- **Database** PostgreSQL using Prisma ORM to ensure strict data compliance for government deployment.
+- **Indian number formatting**: `formatINR()` shows ₹ Cr / ₹ L / ₹ with `en-IN` locale.
+- **Dates**: `formatDate()` shows Indian English format (e.g. "15 January 2024").
+- **Admin & Department Login** accessible via footer SMC logo or direct portal URLs (`/login/admin`, `/login/department`).
+- **CSS**: Plain CSS with CSS variables, no framework (SMC visual match).
+- **Mobile responsive**: 3-col → 2-col → 1-col breakpoints at 768px and 480px.
+- **Accessibility Toolbar (A11yBar)**: Added at root level (`App.jsx`) and layout shells (`AdminLayout`, `DepartmentLayout`) to control global accessibility settings.
+- **Internationalization (i18n)**: Translatable between English (`en`) and Marathi (`mr`). Translations stored in `frontend/src/i18n.js`.
 
 ## Routing (React Router v6)
 
-| Path                     | Component      | Access  |
-|--------------------------|----------------|---------|
-| `/`                      | Home           | Public  |
-| `/projects`              | Home (filtered)| Public  |
-| `/about`                 | About          | Public  |
-| `/projects/:id`          | ProjectDetail  | Public  |
-| `/login`                 | LoginSelector  | Public  |
-| `/login/admin`           | AdminLogin     | Public  |
-| `/login/department`      | DepartmentLogin| Public  |
-| `/admin/dashboard`       | Dashboard      | Auth    |
-| `/admin/projects`        | ManageProjects | Auth    |
-| `/admin/projects/add`    | AddProject     | Auth    |
-| `/admin/projects/edit/:id` | EditProject  | Auth    |
-| `/admin/report`          | Report         | Auth    |
-| `*`                      | 404 Page       | Public  |
+| Path                       | Component           | Access      |
+|----------------------------|---------------------|-------------|
+| `/`                        | Home                | Public      |
+| `/projects`                | Home (filtered)     | Public      |
+| `/about`                   | About               | Public      |
+| `/projects/:id`            | ProjectDetail       | Public      |
+| `/login`                   | LoginSelector       | Public      |
+| `/login/admin`             | AdminLogin          | Public      |
+| `/login/department`        | DepartmentLogin     | Public      |
+| `/department/dashboard`    | DepartmentDashboard | Department  |
+| `/admin/dashboard`         | Dashboard           | Admin       |
+| `/admin/projects`          | ManageProjects      | Admin       |
+| `/admin/projects/add`      | AddProject          | Admin       |
+| `/admin/projects/edit/:id` | EditProject         | Admin       |
+| `/admin/report`            | Report              | Admin       |
+| `*`                        | 404 Page            | Public      |
 
 ## How to Run
 
@@ -177,7 +183,7 @@ smc-project-tracker/
 cd backend
 npm install
 npx prisma db push # Syncs schema to PostgreSQL
-node seed.js       # Creates superadmin + 5 sample projects
+node seed.js       # Creates superadmin, department officer + 5 sample projects with bills
 npm run dev        # Port 5000
 ```
 
@@ -189,32 +195,8 @@ npm run dev     # Port 5173
 ```
 
 ### Default Credentials
-- **Employee ID:** `SMC001`
-- **Password:** `Admin@123`
-
-## Environment Variables (`backend/.env`)
-
-| Variable         | Default                                        |
-|------------------|------------------------------------------------|
-| `PORT`           | `5000`                                         |
-| `DATABASE_URL`   | `postgresql://postgres:password@localhost:5432/smc_projects?schema=public` |
-| `JWT_SECRET`     | `your_super_secret_key_here`                   |
-| `JWT_EXPIRES_IN` | `7d`                                           |
-| `NODE_ENV`       | `development`                                  |
-
-## .gitignore Rules
-
-```
-node_modules/
-dist/
-.env
-```
-
-## Logos
-
-- **`favicon_smc.png`** — SMC logo, stored at project root AND in `frontend/public/`
-- Used as favicon, in Navbar top bar, and in Footer first column
-- Footer logo links to `/login`
+- **Superadmin Employee ID:** `SMC001` | **Password:** `Admin@123`
+- **Department Employee ID:** `DEP001` | **Password:** `Dept@123`
 
 ## Notes for Future AI Agents
 
@@ -222,6 +204,5 @@ dist/
 - Maintain the SMC color scheme (navy + orange + green) in any new components
 - Use `formatINR()` for all monetary values shown to users
 - Use `formatDate()` for all dates shown to users
-- The admin login is intentionally hidden — only accessible via footer logo click
-- CSS class naming: lowercase with hyphens (`.project-card`, `.filter-bar`)
+- CSS class naming: lowercase with hyphens (`.project-card`, `.bills-table`)
 - No CSS-in-JS or frameworks — all plain CSS with `:root` variables

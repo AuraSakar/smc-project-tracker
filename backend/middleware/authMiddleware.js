@@ -45,4 +45,12 @@ const requireSuperAdmin = (req, res, next) => {
   }
 };
 
-module.exports = { protect, requireAdmin, requireSuperAdmin };
+const requireDepartment = (req, res, next) => {
+  if (req.user && (req.user.role === 'department' || req.user.role === 'admin' || req.user.role === 'superadmin')) {
+    next();
+  } else {
+    res.status(403).json({ success: false, message: 'Not authorized as department user' });
+  }
+};
+
+module.exports = { protect, requireAdmin, requireSuperAdmin, requireDepartment };

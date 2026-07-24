@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import api from '../api/axios';
 import StatusBadge from '../components/StatusBadge';
 import { formatINR, formatDate } from '../utils/format';
@@ -11,6 +12,7 @@ const categoryIcons = {
 };
 
 export default function ProjectDetail() {
+  const { t } = useTranslation();
   const { id } = useParams();
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -112,6 +114,47 @@ export default function ProjectDetail() {
           </a>
         ) : (
           <div className="map-placeholder"><p>Map not available</p></div>
+        )}
+      </div>
+
+      {/* Project Bills & Financial Records Table */}
+      <div className="bills-public-section">
+        <h3><i className="fas fa-file-invoice-dollar"></i> {t('Project Bills & Financial Record')}</h3>
+        {project.bills?.length > 0 ? (
+          <div className="table-responsive">
+            <table className="public-bills-table">
+              <thead>
+                <tr>
+                  <th style={{ width: '80px' }}>{t('Sr. No.')}</th>
+                  <th style={{ width: '160px' }}>{t('Bill No.')}</th>
+                  <th style={{ width: '140px' }}>{t('RA Bill')}</th>
+                  <th>{t('Bill Details')}</th>
+                  <th style={{ width: '160px', textAlign: 'right' }}>{t('Amount')}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {project.bills.map((bill, index) => (
+                  <tr key={bill.id || index}>
+                    <td className="sr-no-cell">{index + 1}</td>
+                    <td className="bill-no-cell font-mono">{bill.billNo}</td>
+                    <td><span className="ra-bill-tag">{bill.raBill}</span></td>
+                    <td className="bill-details-cell">{bill.billDetails}</td>
+                    <td className="amount-cell">{formatINR(bill.amount)}</td>
+                  </tr>
+                ))}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colSpan="4" className="text-right font-bold">{t('Total Billed Amount')}:</td>
+                  <td className="amount-cell font-bold text-accent">
+                    {formatINR(project.bills.reduce((sum, b) => sum + Number(b.amount || 0), 0))}
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        ) : (
+          <p className="no-bills-msg">{t('No official bills issued yet for this project.')}</p>
         )}
       </div>
 

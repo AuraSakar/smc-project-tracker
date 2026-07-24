@@ -3,6 +3,7 @@ import { ToastContainer } from 'react-toastify';
 import ProtectedRoute from './components/ProtectedRoute';
 import PublicLayout from './layouts/PublicLayout';
 import AdminLayout from './layouts/AdminLayout';
+import DepartmentLayout from './layouts/DepartmentLayout';
 
 // Public pages
 import Home from './pages/Home';
@@ -19,6 +20,9 @@ import ManageProjects from './pages/admin/ManageProjects';
 import AddProject from './pages/admin/AddProject';
 import EditProject from './pages/admin/EditProject';
 import Report from './pages/admin/Report';
+
+// Department pages
+import DepartmentDashboard from './pages/department/DepartmentDashboard';
 
 export default function App() {
   return (
@@ -50,6 +54,11 @@ export default function App() {
           <Route path="/admin/projects/add" element={<AddProject />} />
           <Route path="/admin/projects/edit/:id" element={<EditProject />} />
           <Route path="/admin/report" element={<Report />} />
+        </Route>
+
+        {/* Department Routes with Shell Layout */}
+        <Route element={<ProtectedRoute><DepartmentLayout /></ProtectedRoute>}>
+          <Route path="/department/dashboard" element={<DepartmentDashboard />} />
         </Route>
       </Routes>
       <ToastContainer position="top-right" theme="colored" />

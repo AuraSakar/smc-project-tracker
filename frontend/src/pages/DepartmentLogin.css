@@ -1,19 +1,30 @@
 .department-login-card {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.25rem;
 }
 
-.coming-soon-message {
+.login-subtitle {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  margin-top: 0.25rem;
+}
+
+.login-card-footer {
   text-align: center;
-  padding: 2rem;
-  background-color: rgba(232, 119, 34, 0.1); /* light accent color */
-  border: 1px dashed var(--color-accent);
-  border-radius: 8px;
-  color: var(--color-text);
+  margin-top: 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border);
 }
 
-.coming-soon-message h3 {
+.back-link {
+  color: var(--color-primary);
+  font-weight: 500;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s;
+}
+
+.back-link:hover {
   color: var(--color-accent);
-  margin-bottom: 0.5rem;
 }

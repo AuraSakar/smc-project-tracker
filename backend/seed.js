@@ -9,6 +9,7 @@ const seed = async () => {
     console.log('Connecting to PostgreSQL for seeding...');
 
     // Clear existing data
+    await prisma.projectBill.deleteMany();
     await prisma.projectOfficial.deleteMany();
     await prisma.projectDocument.deleteMany();
     await prisma.projectUpdate.deleteMany();
@@ -18,6 +19,7 @@ const seed = async () => {
     await prisma.user.deleteMany();
 
     const hashedPassword = await bcrypt.hash('Admin@123', 10);
+    const deptPassword = await bcrypt.hash('Dept@123', 10);
 
     await prisma.user.create({
       data: {
@@ -27,6 +29,17 @@ const seed = async () => {
         password: hashedPassword,
         role: 'superadmin',
         department: 'Administration',
+      }
+    });
+
+    await prisma.user.create({
+      data: {
+        name: 'Engineering Department Officer',
+        employeeId: 'DEP001',
+        email: 'engineering@solapurcorporation.gov.in',
+        password: deptPassword,
+        role: 'department',
+        department: 'Public Works',
       }
     });
 
@@ -72,6 +85,10 @@ const seed = async () => {
         googleMapsLink: 'https://maps.google.com/?q=Hotgi+Road+Solapur',
         latitude: 17.6805, longitude: 75.9064,
         officials: [{ name: 'Rajesh Patil', designation: 'City Engineer', department: 'Public Works', contactNumber: '0217-2740335' }],
+        bills: [
+          { billNo: 'SMC/PW/2024/001', raBill: '1st RA Bill', billDetails: 'Site preparation, levelling & initial storm drain excavation', amount: 1200000, addedBy: 'DEP001' },
+          { billNo: 'SMC/PW/2024/002', raBill: '2nd RA Bill', billDetails: 'Sub-base macadam laying & side kerb casting', amount: 1700000, addedBy: 'DEP001' },
+        ]
       },
       {
         title: 'Siddheshwar Lake Restoration Project',
@@ -103,6 +120,9 @@ const seed = async () => {
         description: 'Development of a modern garden with seating, fountain, lighting, and children\'s play area.',
         latitude: 17.6749, longitude: 75.9082,
         officials: [{ name: 'Meena Kulkarni', designation: 'Garden Superintendent', department: 'Garden Department', contactNumber: '' }],
+        bills: [
+          { billNo: 'SMC/GD/2024/001', raBill: 'Final RA Bill', billDetails: 'Landscaping, garden fountain installation and children play equipment', amount: 1180000, addedBy: 'DEP001' }
+        ]
       },
       {
         title: 'Murarji Peth Drainage Improvement',
@@ -137,6 +157,10 @@ const seed = async () => {
           { name: 'Dr. Sachin Ombase', designation: 'Municipal Commissioner', department: 'Administration', contactNumber: '0217-2735293' },
           { name: 'Vinod Salokhe', designation: 'Structural Engineer', department: 'Public Works', contactNumber: '' },
         ],
+        bills: [
+          { billNo: 'SMC/BLD/2023/001', raBill: '1st RA Bill', billDetails: 'Foundation raft slab and basement column casting', amount: 20000000, addedBy: 'DEP001' },
+          { billNo: 'SMC/BLD/2023/002', raBill: '2nd RA Bill', billDetails: 'Ground & 1st floor structural framework slab casting', amount: 28000000, addedBy: 'DEP001' },
+        ]
       },
     ];
 
@@ -145,7 +169,7 @@ const seed = async () => {
       const year = new Date().getFullYear();
       const projectId = `SMC-${year}-${String(count).padStart(3, '0')}`;
       
-      const { officials, ...projectData } = proj;
+      const { officials, bills, ...projectData } = proj;
 
       await prisma.project.create({
         data: {
@@ -153,7 +177,10 @@ const seed = async () => {
           projectId,
           officials: {
             create: officials,
-          }
+          },
+          bills: bills ? {
+            create: bills,
+          } : undefined
         }
       });
       count++;
@@ -161,6 +188,7 @@ const seed = async () => {
 
     console.log('Seed data inserted successfully into PostgreSQL!');
     console.log('Default superadmin: employeeId=SMC001, password=Admin@123');
+    console.log('Default department: employeeId=DEP001, password=Dept@123');
     process.exit(0);
   } catch (error) {
     console.error('Seeding failed:', error);

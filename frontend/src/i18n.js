@@ -1,11 +1,10 @@
-import i18n from 'i18next';
-import { initReactI18next } from 'react-i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
+import i18n from "i18next";
+import { initReactI18next } from "react-i18next";
+import LanguageDetector from "i18next-browser-languagedetector";
 
 const resources = {
   en: {
     translation: {
-      // Navbar & Footer
       "Home": "Home",
       "All Projects": "All Projects",
       "Categories": "Categories",
@@ -22,8 +21,6 @@ const resources = {
       "About this Portal": "About this Portal",
       "Footer About": "This is the official project tracking portal of Solapur Municipal Corporation. Citizens can track all civic development projects in real-time.",
       "Footer Copyright": "© 2024 Solapur Municipal Corporation | Maharashtra Government | All Rights Reserved",
-      
-      // Accessibility Bar
       "Font Size": "Font Size",
       "Spacing": "Spacing",
       "Normal": "Normal",
@@ -35,8 +32,6 @@ const resources = {
       "Pause": "Pause",
       "Resume": "Resume",
       "Stop": "Stop",
-
-      // About Page
       "About SMC Project Tracker": "About SMC Project Tracker",
       "Our Mission": "Our Mission",
       "Mission Text": "The Solapur Municipal Corporation (SMC) is committed to transparency, efficiency, and citizen engagement. The SMC Project Tracker is an official initiative to provide citizens with real-time visibility into civic development projects happening across our city.",
@@ -52,8 +47,6 @@ const resources = {
       "Public Buildings Text": "Constructing community halls, hospitals, and schools.",
       "Contact Us Text": "If you have any questions or feedback regarding civic projects, please reach out to us:",
       "Website": "Website",
-
-      // Home Page
       "Project Tracker": "Project Tracker",
       "Hero Description": "Track the progress of city development projects in real-time. Transparency and accountability for a better Solapur.",
       "Total Projects": "Total Projects",
@@ -63,19 +56,13 @@ const resources = {
       "Latest Projects": "Latest Projects",
       "Search Placeholder": "Search projects by name, ward, or location...",
       "Search": "Search",
-
-      // Filters
       "Category": "Category",
       "All Categories": "All Categories",
       "Status": "Status",
       "All Statuses": "All Statuses",
       "Ward": "Ward",
       "All Wards": "All Wards",
-      
-      // Projects
       "No projects found": "No projects found matching your criteria.",
-      
-      // Categories options
       "Road": "Road",
       "Water Supply": "Water Supply",
       "Drainage": "Drainage",
@@ -84,18 +71,12 @@ const resources = {
       "Building": "Building",
       "Electricity": "Electricity",
       "Other": "Other",
-
-      // Statuses
       "Planned": "Planned",
       "Tender Issued": "Tender Issued",
       "On Hold": "On Hold",
       "Cancelled": "Cancelled",
-
-      // Project Card
       "Expected": "Expected",
       "View Details": "View Details",
-
-      // Admin Layout & Login Selector
       "Portal Login": "Portal Login",
       "Select your portal to continue": "Select your portal to continue",
       "Access the main project management dashboard (Superadmin & Admins).": "Access the main project management dashboard (Superadmin & Admins).",
@@ -115,12 +96,35 @@ const resources = {
       "Project Title": "Project Title",
       "Manage Project": "Manage Project",
       "Report": "Report",
-      "Reporting features coming soon.": "Reporting features coming soon."
+      "Reporting features coming soon.": "Reporting features coming soon.",
+      "Project Bills & Financial Record": "Project Bills & Financial Record",
+      "Project Bills Record": "Project Bills Record",
+      "Sr. No.": "Sr. No.",
+      "Bill No.": "Bill No.",
+      "RA Bill": "RA Bill",
+      "Bill Details": "Bill Details",
+      "Amount": "Amount",
+      "Total Billed Amount": "Total Billed Amount",
+      "Add New Bill": "Add New Bill",
+      "Issue New Bill": "Issue New Bill",
+      "Department Portal": "Department Portal",
+      "Department Project Billing Portal": "Department Project Billing Portal",
+      "Department Billing Management": "Department Billing Management",
+      "Manage Project Bills": "Manage Project Bills",
+      "Department Employee ID": "Department Employee ID",
+      "Department Sign In": "Department Sign In",
+      "Sign in to manage project billing & RA bills": "Sign in to manage project billing & RA bills",
+      "No official bills issued yet for this project.": "No official bills issued yet for this project.",
+      "Remaining Budget": "Remaining Budget",
+      "Total Bills Issued": "Total Bills Issued",
+      "Select Project:": "Select Project:",
+      "Issue First Bill": "Issue First Bill",
+      "Remove Bill": "Remove Bill",
+      "Department Login Successful": "Department Login Successful"
     }
   },
   mr: {
     translation: {
-      // Navbar & Footer
       "Home": "मुखपृष्ठ",
       "All Projects": "सर्व प्रकल्प",
       "Categories": "श्रेणी",
@@ -137,8 +141,6 @@ const resources = {
       "About this Portal": "या पोर्टल बद्दल",
       "Footer About": "हे सोलापूर महानगरपालिकेचे अधिकृत प्रकल्प ट्रॅकिंग पोर्टल आहे. नागरिक सर्व नागरी विकास प्रकल्पांचा रिअल-टाइम मागोवा घेऊ शकतात.",
       "Footer Copyright": "© 2024 सोलापूर महानगरपालिका | महाराष्ट्र शासन | सर्व हक्क राखीव",
-      
-      // Accessibility Bar
       "Font Size": "फॉन्ट आकार",
       "Spacing": "अंतर",
       "Normal": "सामान्य",
@@ -150,8 +152,6 @@ const resources = {
       "Pause": "थांबा",
       "Resume": "सुरू करा",
       "Stop": "बंद करा",
-
-      // About Page
       "About SMC Project Tracker": "SMC प्रकल्प ट्रॅकर बद्दल",
       "Our Mission": "आमचे ध्येय",
       "Mission Text": "सोलापूर महानगरपालिका (SMC) पारदर्शकता, कार्यक्षमता आणि नागरिक सहभागासाठी वचनबद्ध आहे. SMC प्रकल्प ट्रॅकर हा शहरातील नागरी विकास प्रकल्पांची रिअल-टाइम माहिती नागरिकांना देण्यासाठी एक अधिकृत उपक्रम आहे.",
@@ -167,30 +167,22 @@ const resources = {
       "Public Buildings Text": "कम्युनिटी हॉल, रुग्णालये आणि शाळांचे बांधकाम.",
       "Contact Us Text": "नागरी प्रकल्पांबद्दल तुम्हाला काही प्रश्न किंवा अभिप्राय असल्यास, कृपया आमच्याशी संपर्क साधा:",
       "Website": "वेबसाइट",
-
-      // Home Page
       "Project Tracker": "प्रकल्प ट्रॅकर",
       "Hero Description": "शहरातील विकास प्रकल्पांच्या प्रगतीचा रिअल-टाइम मागोवा घ्या. उत्तम सोलापूरसाठी पारदर्शकता आणि उत्तरदायित्व.",
       "Total Projects": "एकूण प्रकल्प",
       "In Progress": "प्रगतीपथावर",
-      "Completed": "पूर्ण झालेले",
+      "Completed": "पूर्ण केलेले",
       "Total Budget (Cr)": "एकूण बजेट (कोटी)",
       "Latest Projects": "नवीनतम प्रकल्प",
       "Search Placeholder": "नाव, प्रभाग किंवा स्थानानुसार प्रकल्प शोधा...",
       "Search": "शोधा",
-
-      // Filters
       "Category": "श्रेणी",
       "All Categories": "सर्व श्रेणी",
       "Status": "स्थिती",
       "All Statuses": "सर्व स्थिती",
       "Ward": "प्रभाग",
       "All Wards": "सर्व प्रभाग",
-      
-      // Projects
       "No projects found": "तुमच्या निकषांशी जुळणारे कोणतेही प्रकल्प आढळले नाहीत.",
-
-      // Categories options
       "Road": "रस्ते",
       "Water Supply": "पाणीपुरवठा",
       "Drainage": "ड्रेनेज",
@@ -199,18 +191,12 @@ const resources = {
       "Building": "इमारती",
       "Electricity": "वीज",
       "Other": "इतर",
-
-      // Statuses
       "Planned": "नियोजित",
       "Tender Issued": "निविदा जारी",
       "On Hold": "प्रलंबित",
       "Cancelled": "रद्द",
-
-      // Project Card
       "Expected": "अपेक्षित",
       "View Details": "तपशील पहा",
-
-      // Admin Layout & Login Selector
       "Portal Login": "पोर्टल लॉगिन",
       "Select your portal to continue": "सुरू ठेवण्यासाठी आपले पोर्टल निवडा",
       "Access the main project management dashboard (Superadmin & Admins).": "मुख्य प्रकल्प व्यवस्थापन डॅशबोर्डमध्ये प्रवेश करा (सुपरॅडमिन आणि ॲडमिन).",
@@ -230,7 +216,31 @@ const resources = {
       "Project Title": "प्रकल्प शीर्षक",
       "Manage Project": "प्रकल्प व्यवस्थापित करा",
       "Report": "अहवाल",
-      "Reporting features coming soon.": "अहवाल वैशिष्ट्ये लवकरच येत आहेत."
+      "Reporting features coming soon.": "अहवाल वैशिष्ट्ये लवकरच येत आहेत.",
+      "Project Bills & Financial Record": "प्रकल्प बिले आणि आर्थिक नोंद",
+      "Project Bills Record": "प्रकल्प बिलांची नोंद",
+      "Sr. No.": "अ.क्र.",
+      "Bill No.": "बिल क्र.",
+      "RA Bill": "आर.ए. बिल",
+      "Bill Details": "बिलाचा तपशील",
+      "Amount": "रक्कम",
+      "Total Billed Amount": "एकूण बिल रक्कम",
+      "Add New Bill": "नवीन बिल जोडा",
+      "Issue New Bill": "नवीन बिल जारी करा",
+      "Department Portal": "विभाग पोर्टल",
+      "Department Project Billing Portal": "विभाग प्रकल्प बिलिंग पोर्टल",
+      "Department Billing Management": "विभाग बिलिंग व्यवस्थापन",
+      "Manage Project Bills": "प्रकल्प बिले व्यवस्थापित करा",
+      "Department Employee ID": "विभाग कर्मचारी आयडी",
+      "Department Sign In": "विभाग साइन इन",
+      "Sign in to manage project billing & RA bills": "प्रकल्प बिलिंग आणि RA बिले व्यवस्थापित करण्यासाठी साइन इन करा",
+      "No official bills issued yet for this project.": "या प्रकल्पासाठी अद्याप कोणतीही अधिकृत बिले जारी केलेली नाहीत.",
+      "Remaining Budget": "उर्वरित अर्थसंकल्प",
+      "Total Bills Issued": "जारी केलेली एकूण बिले",
+      "Select Project:": "प्रकल्प निवडा:",
+      "Issue First Bill": "पहिले बिल जारी करा",
+      "Remove Bill": "बिल काढा",
+      "Department Login Successful": "विभाग लॉगिन यशस्वी"
     }
   }
 };
@@ -240,9 +250,9 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
-    fallbackLng: 'en',
+    fallbackLng: "en",
     interpolation: {
-      escapeValue: false // React already escapes values
+      escapeValue: false
     }
   });
 

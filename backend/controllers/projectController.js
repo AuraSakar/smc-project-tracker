@@ -62,6 +62,7 @@ exports.getProject = async (req, res, next) => {
         officials: true,
         documents: true,
         updates: { orderBy: { date: 'desc' } },
+        bills: { orderBy: { createdAt: 'asc' } },
       },
     });
     
@@ -181,6 +182,84 @@ exports.addUpdate = async (req, res, next) => {
 
     res.json({ success: true, project: { ...updatedProject, _id: updatedProject.id } });
   } catch (error) {
+    next(error);
+  }
+};
+
+exports.getProjectBills = async (req, res, next) => {
+  try {
+    const bills = await prisma.projectBill.findMany({
+      where: { projectId: req.params.id },
+      orderBy: { createdAt: 'asc' },
+    });
+    res.json({ success: true, bills });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.addProjectBill = async (req, res, next) => {
+  try {
+    const { billNo, raBill, billDetails, amount } = req.body;
+    const project = await prisma.project.findUnique({
+      where: { id: req.params.id },
+    });
+
+    if (!project) return res.status(404).json({ success: false, message: 'Project not found' });
+
+    const bill = await prisma.projectBill.create({
+      data: {
+        billNo,
+        raBill,
+        billDetails,
+        amount: parseFloat(amount),
+        addedBy: req.user ? `${req.user.name} (${req.user.employeeId})` : 'Department User',
+        projectId: req.params.id,
+      },
+    });
+
+    // Update project amountSpent automatically
+    const totalBills = await prisma.projectBill.aggregate({
+      where: { projectId: req.params.id },
+      _sum: { amount: true },
+    });
+    const newAmountSpent = totalBills._sum.amount || 0;
+
+    await prisma.project.update({
+      where: { id: req.params.id },
+      data: { amountSpent: newAmountSpent },
+    });
+
+    res.status(201).json({ success: true, bill });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.deleteProjectBill = async (req, res, next) => {
+  try {
+    const { billId } = req.params;
+    await prisma.projectBill.delete({
+      where: { id: billId },
+    });
+
+    // Recalculate amountSpent for the project
+    const totalBills = await prisma.projectBill.aggregate({
+      where: { projectId: req.params.id },
+      _sum: { amount: true },
+    });
+    const newAmountSpent = totalBills._sum.amount || 0;
+
+    await prisma.project.update({
+      where: { id: req.params.id },
+      data: { amountSpent: newAmountSpent },
+    });
+
+    res.json({ success: true, message: 'Bill removed successfully' });
+  } catch (error) {
+    if (error.code === 'P2025') {
+      return res.status(404).json({ success: false, message: 'Bill not found' });
+    }
     next(error);
   }
 };
